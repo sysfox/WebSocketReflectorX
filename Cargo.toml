@@ -48,7 +48,7 @@ url                = { version = "2.5" }
 
 # GUI
 async-compat          = { version = "0.2" }
-i-slint-backend-winit = "1.15"
+i-slint-backend-winit = "1.17"
 open                  = "5.3"
 
 reqwest = { version = "0.13", features = [
@@ -58,7 +58,7 @@ reqwest = { version = "0.13", features = [
   "json",
 ] }
 
-slint = { version = "1.15", default-features = false, features = [
+slint = { version = "1.17", default-features = false, features = [
   "accessibility",
   "backend-winit",
   "compat-1-2",
@@ -67,6 +67,7 @@ slint = { version = "1.15", default-features = false, features = [
   "renderer-software",
   "serde",
   "std",
+  "system-tray",
 ] }
 
 sys-locale = "0.3"
@@ -78,5 +79,5 @@ winit      = "0.30"
 build-target  = "0.8"
 git-version   = "0.3"
 rustc_version = "0.4"
-slint-build   = "1.15"
+slint-build   = "1.17"
 winres        = "0.1"
