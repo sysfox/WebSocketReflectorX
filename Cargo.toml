@@ -72,6 +72,8 @@ slint = { version = "1.15", default-features = false, features = [
 sys-locale = "0.3"
 sysinfo    = "0.38"
 toml       = "1.0"
+tray-icon  = "0.24"
+image      = { version = "0.25", default-features = false, features = ["png"] }
 winit      = "0.30"
 
 # build dependencies

@@ -1,5 +1,6 @@
 pub mod settings;
 pub mod system_info;
+pub mod tray;
 pub mod ui_state;
 pub mod window_control;
 
@@ -9,4 +10,5 @@ pub fn setup(window: &MainWindow) {
     window_control::setup(window);
     system_info::setup(window);
     ui_state::setup(window);
+    tray::setup(window);
 }

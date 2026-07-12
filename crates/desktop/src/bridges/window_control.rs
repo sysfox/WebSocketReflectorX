@@ -6,7 +6,7 @@ use winit::window::ResizeDirection;
 
 use crate::{
     launcher,
-    ui::{MainWindow, WindowControlBridge},
+    ui::{MainWindow, SettingsBridge, WindowControlBridge},
 };
 
 pub fn setup(window: &MainWindow) {
@@ -36,7 +36,15 @@ pub fn setup(window: &MainWindow) {
                 EventResult::Propagate
             }
             winit::event::WindowEvent::CloseRequested => {
-                launcher::shutdown(&window_weak);
+                if let Some(window) = window_weak.upgrade() {
+                    let settings = window.global::<SettingsBridge>();
+                    if settings.get_running_in_tray() {
+                        let _ = window.hide();
+                        crate::bridges::settings::save_config(&window);
+                    } else {
+                        launcher::shutdown(&window_weak);
+                    }
+                }
                 EventResult::PreventDefault
             }
             _ => EventResult::Propagate,
@@ -65,8 +73,17 @@ pub fn setup(window: &MainWindow) {
 
     let window_clone_pin = window.as_weak();
     window_control_bridge.on_close(move || {
-        // TODO: system tray implementation
-        launcher::shutdown(&window_clone_pin);
+        let window = match window_clone_pin.upgrade() {
+            Some(w) => w,
+            None => return,
+        };
+        let settings = window.global::<SettingsBridge>();
+        if settings.get_running_in_tray() {
+            let _ = window.hide();
+            crate::bridges::settings::save_config(&window);
+        } else {
+            launcher::shutdown(&window_clone_pin);
+        }
     });
 
     let window_clone_pin = window.as_weak();

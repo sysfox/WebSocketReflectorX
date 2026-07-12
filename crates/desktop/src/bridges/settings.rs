@@ -90,6 +90,10 @@ pub fn load_config(window: &MainWindow) {
     bridge.set_language(config.language.into());
     bridge.set_running_in_tray(config.running_in_tray);
 
+    if config.running_in_tray {
+        crate::bridges::tray::ensure_created(window);
+    }
+
     let window_clone = window.as_weak();
     bridge.on_change_language(move |lang| {
         let window = window_clone.upgrade().unwrap();
@@ -97,6 +101,31 @@ pub fn load_config(window: &MainWindow) {
         bridge.set_language(lang.clone());
 
         slint::select_bundled_translation(lang.as_str()).ok();
+
+        // Refresh the tray menu labels to match the new language.
+        if crate::bridges::tray::is_created() {
+            crate::bridges::tray::destroy();
+            crate::bridges::tray::ensure_created(&window);
+        }
+    });
+
+    let window_clone = window.as_weak();
+    bridge.on_toggle_running_in_tray(move || {
+        let window = match window_clone.upgrade() {
+            Some(w) => w,
+            None => return,
+        };
+        let bridge = window.global::<SettingsBridge>();
+        let new_val = !bridge.get_running_in_tray();
+        bridge.set_running_in_tray(new_val);
+
+        if new_val {
+            crate::bridges::tray::ensure_created(&window);
+        } else {
+            crate::bridges::tray::destroy();
+        }
+
+        save_config(&window);
     });
 }
 

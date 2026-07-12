@@ -137,11 +137,6 @@ msgctxt "SettingsPage"
 msgid "Running in system tray when closed"
 msgstr "Running in system tray when closed"
 
-#: crates/desktop/ui/pages/settings.slint:95
-msgctxt "SettingsPage"
-msgid " (not implemented yet) "
-msgstr " (not implemented yet) "
-
 #: crates/desktop/ui/pages/settings.slint:106
 msgctxt "SettingsPage"
 msgid "Enabled"
