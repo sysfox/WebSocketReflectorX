@@ -112,7 +112,7 @@ fn show_window(window_weak: &slint::Weak<MainWindow>) {
         let _ = window.show();
         window.window().with_winit_window(|winit_window| {
             winit_window.set_minimized(false);
-            winit_window.set_focus();
+            let _ = winit_window.focus_window();
         });
     }
 }
@@ -149,7 +149,7 @@ pub fn ensure_created(window: &MainWindow) {
         .with_menu(Box::new(menu))
         // Left-click should bring the window back instead of opening the menu;
         // the menu is still reachable via right-click.
-        .show_menu_on_left_click(false);
+        .with_menu_on_left_click(false);
 
     if let Some(icon) = load_icon() {
         builder = builder.with_icon(icon);
