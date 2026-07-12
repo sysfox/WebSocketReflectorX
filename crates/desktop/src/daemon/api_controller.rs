@@ -468,8 +468,8 @@ async fn popup_window(
 ) -> Result<impl IntoResponse, (StatusCode, String)> {
     slint::invoke_from_event_loop(move || {
         let ui_handle = state.ui.upgrade().unwrap();
-        ui_handle.show().ok();
         ui_handle.window().with_winit_window(|winit_window| {
+            winit_window.set_visible(true);
             winit_window.set_minimized(false);
         });
     })
