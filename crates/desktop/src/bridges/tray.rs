@@ -109,10 +109,11 @@ fn handle_menu_event(window_weak: &slint::Weak<MainWindow>, id: &tray_icon::menu
 
 fn show_window(window_weak: &slint::Weak<MainWindow>) {
     if let Some(window) = window_weak.upgrade() {
-        let _ = window.show();
         window.window().with_winit_window(|winit_window| {
+            // Restore the window that was hidden via winit::Window::set_visible(false).
+            winit_window.set_visible(true);
             winit_window.set_minimized(false);
-            let _ = winit_window.focus_window();
+            winit_window.focus_window();
         });
     }
 }

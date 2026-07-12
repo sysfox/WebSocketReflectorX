@@ -9,6 +9,33 @@ use crate::{
     ui::{MainWindow, SettingsBridge, WindowControlBridge},
 };
 
+/// Hide the window into the system tray when the user has enabled that
+/// behaviour.  Returns `true` when the window was hidden (the close event
+/// has been consumed), `false` when the application should proceed to shut
+/// down.
+fn hide_to_tray(window: &MainWindow) -> bool {
+    let settings = window.global::<SettingsBridge>();
+    if !settings.get_running_in_tray() {
+        return false;
+    }
+
+    // Make sure the tray icon exists before hiding the window, otherwise
+    // the user would have no way to bring the application back.
+    crate::bridges::tray::ensure_created(window);
+    if !crate::bridges::tray::is_created() {
+        return false;
+    }
+
+    window.window().with_winit_window(|winit_window| {
+        // Use the winit API directly instead of Slint's `hide()`.  On some
+        // backends `Window::hide()` is treated as a close, which would make
+        // `ui.run()` return and terminate the process.
+        winit_window.set_visible(false);
+    });
+    crate::bridges::settings::save_config(window);
+    true
+}
+
 pub fn setup(window: &MainWindow) {
     let mut resize_map = HashMap::new();
     resize_map.insert("r".to_string(), ResizeDirection::East);
@@ -37,11 +64,7 @@ pub fn setup(window: &MainWindow) {
             }
             winit::event::WindowEvent::CloseRequested => {
                 if let Some(window) = window_weak.upgrade() {
-                    let settings = window.global::<SettingsBridge>();
-                    if settings.get_running_in_tray() {
-                        let _ = window.hide();
-                        crate::bridges::settings::save_config(&window);
-                    } else {
+                    if !hide_to_tray(&window) {
                         launcher::shutdown(&window_weak);
                     }
                 }
@@ -77,11 +100,7 @@ pub fn setup(window: &MainWindow) {
             Some(w) => w,
             None => return,
         };
-        let settings = window.global::<SettingsBridge>();
-        if settings.get_running_in_tray() {
-            let _ = window.hide();
-            crate::bridges::settings::save_config(&window);
-        } else {
+        if !hide_to_tray(&window) {
             launcher::shutdown(&window_clone_pin);
         }
     });

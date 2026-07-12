@@ -137,6 +137,7 @@ pub fn setup(ui: &MainWindow) {
                 scope_host.as_str(),
             )
             .await;
+            save_scopes(&handle_cloned);
         })) {
             Ok(_) => {}
             Err(e) => {
@@ -154,6 +155,7 @@ pub fn setup(ui: &MainWindow) {
         match slint::spawn_local(async_compat::Compat::new(async move {
             ui_controller::on_scope_del(&state_cloned, handle_cloned.clone(), scope_host.as_str())
                 .await;
+            save_scopes(&handle_cloned);
         })) {
             Ok(_) => {}
             Err(e) => {
