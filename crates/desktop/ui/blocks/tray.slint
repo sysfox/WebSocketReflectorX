@@ -1,0 +1,33 @@
+export component WsrxTray inherits SystemTrayIcon {
+    in-out property <string> show-label: "Show";
+    in-out property <string> quit-label: "Quit";
+
+    icon: @image-url("../assets/logo.png");
+    tooltip: "WebSocket Reflector X";
+    title: "WebSocket Reflector X";
+
+    callback show-window();
+    callback quit();
+
+    clicked => {
+        root.show-window();
+    }
+
+    Menu {
+        MenuItem {
+            title: root.show-label;
+            activated => {
+                root.show-window();
+            }
+        }
+
+        MenuSeparator {}
+
+        MenuItem {
+            title: root.quit-label;
+            activated => {
+                root.quit();
+            }
+        }
+    }
+}

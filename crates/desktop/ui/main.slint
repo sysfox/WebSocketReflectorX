@@ -2,6 +2,7 @@ import "fonts/reverier-mono-regular.ttf";
 
 import { Styles } from "widgets/styles.slint";
 import { SideBar } from "blocks/side-bar.slint";
+import { WsrxTray } from "blocks/tray.slint";
 
 import { WindowControlBridge, Log, SystemInfoBridge, Instance, Scope, InstanceBridge, ScopeBridge, SettingsBridge } from "blocks/bridges.slint";
 import { FramelessWindow } from "widgets/frameless-window.slint";
@@ -9,7 +10,7 @@ import { TitleBar } from "blocks/title-bar.slint";
 import { UiState } from "blocks/globals.slint";
 import { Stack } from "blocks/stack.slint";
 
-export { WindowControlBridge, Log, SystemInfoBridge, Instance, Scope, InstanceBridge, ScopeBridge, SettingsBridge, UiState }
+export { WindowControlBridge, Log, SystemInfoBridge, Instance, Scope, InstanceBridge, ScopeBridge, SettingsBridge, UiState, WsrxTray }
 
 export component MainWindow inherits FramelessWindow {
     title: "WebSocket Reflector X";

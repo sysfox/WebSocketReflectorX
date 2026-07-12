@@ -19,12 +19,10 @@ slint                 = { workspace = true }
 winit                 = { workspace = true }
 
 directories      = { workspace = true }
-image            = { workspace = true }
 local-ip-address = { workspace = true }
 open             = { workspace = true }
 sys-locale       = { workspace = true }
 sysinfo          = { workspace = true }
-tray-icon        = { workspace = true }
 
 async-compat       = { workspace = true }
 bitflags           = { workspace = true }
