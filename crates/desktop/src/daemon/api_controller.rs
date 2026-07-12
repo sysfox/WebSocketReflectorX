@@ -182,8 +182,10 @@ async fn launch_instance(
         if instance.label != instance_data.label {
             instance.label = instance_data.label.clone();
         }
-
-        return Ok(Json(instance.data.clone()));
+        let data = instance.data.clone();
+        drop(instances);
+        super::save_instances(&state).await;
+        return Ok(Json(data));
     }
 
     let instance = ProxyInstance::new(
@@ -196,6 +198,7 @@ async fn launch_instance(
     let instance_resp: InstanceData = (&instance).into();
     instances.push(instance);
     drop(instances);
+    super::save_instances(&state).await;
 
     let state_clone = state.clone();
     let instance = instance_resp.clone();
@@ -273,6 +276,7 @@ async fn close_instance(
     }
 
     instances.retain(|i| i.local.as_str() != req.local);
+    super::save_instances(&state).await;
 
     match slint::invoke_from_event_loop(move || {
         let ui_handle = state.ui.upgrade().unwrap();

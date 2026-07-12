@@ -53,6 +53,7 @@ pub async fn on_instance_add(state: &ServerState, remote: &str, local: &str) {
 
     let label = instance.label.clone();
     state.instances.write().await.push(instance);
+    super::save_instances(&state).await;
 
     let state = state.clone();
 
@@ -89,6 +90,7 @@ pub async fn on_instance_del(state: &ServerState, local: &str) {
         .write()
         .await
         .retain(|instance| instance.local.as_str() != local);
+    super::save_instances(state).await;
 
     let state = state.clone();
     let local = local.to_string();
@@ -194,6 +196,7 @@ pub async fn on_scope_del(state: &ServerState, ui: slint::Weak<MainWindow>, scop
         }
         None => return,
     };
+    super::save_instances(state).await;
 
     let scope_host = scope_host.to_string();
     let state = state.clone();

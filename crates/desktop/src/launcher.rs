@@ -114,6 +114,7 @@ pub fn cleanup_runtime_state(ui: &slint::Weak<MainWindow>) {
     if let Some(window) = ui.upgrade() {
         bridges::settings::save_config(&window);
         daemon::save_scopes(ui);
+        daemon::save_instances_sync(ui);
     }
 
     let proj_dirs = match ProjectDirs::from("org", "xdsec", "wsrx") {
